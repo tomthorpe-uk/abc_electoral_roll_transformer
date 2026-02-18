@@ -1,9 +1,7 @@
  
-from dataclasses import dataclass
-
-from src.file_io import import_full_electoral_role, import_electoral_role_update
-from src.conversion import monthly_update_to_full_file
-from src.crud import apply_create, apply_deletes, apply_edits
+from file_io import import_full_electoral_role, import_electoral_role_update
+from conversion import monthly_update_to_full_file
+from crud import apply_create, apply_deletes, apply_edits
 
 def main() -> None:
     # read files

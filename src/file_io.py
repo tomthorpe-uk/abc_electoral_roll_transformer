@@ -4,9 +4,9 @@ def import_full_electoral_role(path: str) ->pd.DataFrame:
     data = pd.read_csv(path)
 
     # construct primary key for matching
-    data["Elector ID"] = data["Elector Number Prefix"] + "-" + data["Elector Number"]
+    data["Elector ID"] = data["Elector Number Prefix"].astype(str) + "-" + data["Elector Number"].astype(str)
     nonzero_suffixed = data["Elector Number Suffix"] != 0
-    data.loc[nonzero_suffixed, "Elector ID"] = data["Elector ID"].astype(str) + "/" + data["Elector Number Suffix"]
+    data.loc[nonzero_suffixed, "Elector ID"] = data["Elector ID"].astype(str) + "/" + data["Elector Number Suffix"].astype(str)
 
     # fix trailing whitespace in forename column
     data["Elector Forename"].str.strip() 
