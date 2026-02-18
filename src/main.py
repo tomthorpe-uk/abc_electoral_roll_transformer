@@ -5,15 +5,11 @@ from crud import apply_create, apply_deletes, apply_edits
 
 def main() -> None:
     # read files
-    # main_file = input("Please provide the path to the main electoral role: ")
-    main_file = r"/home/tom-thorpe/code/abc_electoral_role_transformer/data/dec_2025_fuil.csv"
-
+    main_file = input("Please provide the path to the main electoral role: ")
     main_file_data = import_full_electoral_role(main_file)
-    # update_file = input("Please provide the path to the monthly update file: ")
-    update_file = r"/home/tom-thorpe/code/abc_electoral_role_transformer/data/jan_2026_update.csv"
 
+    update_file = input("Please provide the path to the monthly update file: ")
     data_creates, data_edits, data_deletes = import_electoral_role_update(update_file)
-
 
     # convert to main file format
     data_creates = monthly_update_to_full_file(data_creates)
