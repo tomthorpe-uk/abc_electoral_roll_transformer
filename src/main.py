@@ -1,9 +1,11 @@
  
 from file_io import import_full_electoral_role, import_electoral_role_update
-from conversion import monthly_update_to_full_file
+from conversion import monthly_update_to_full_file, full_file_to_tvv_upload
 from crud import apply_create, apply_deletes, apply_edits
 
 def main() -> None:
+    print("Starting electoral role file converter...")
+
     main_file = input("Please provide the path to the main electoral role: ")
     main_file_data = import_full_electoral_role(main_file)
 
@@ -20,8 +22,18 @@ def main() -> None:
     main_file_data = apply_create(main_file_data, data_creates)
     main_file_data = apply_edits(main_file_data, data_edits)
 
+    print("Saving...")
     main_file_data.to_csv("merged_electoral_role.csv", index=False, encoding="utf-8-sig")
+
+    import_tvv = input("Convert to TVV format (y/n): ")
+    if import_tvv == "y":
+        print("Converting to TVV format...")
+        tvv_file = full_file_to_tvv_upload(main_file_data)
+        tvv_file.to_csv("tvv_upload.csv", index=False, encoding="utf-8-sig")
+
     print("Done!")
+
+
 
 if __name__ == "__main__": 
     main()

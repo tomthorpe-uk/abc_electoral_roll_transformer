@@ -30,3 +30,4 @@ def import_electoral_role_update(path: str) ->pd.DataFrame:
     print(f"{data_deletes.shape[0]} electors to delete")
 
     return data_adds, data_edits, data_deletes
+
