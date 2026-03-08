@@ -30,7 +30,7 @@ class FullRegisterCols(str, Enum):
     ADDRESS_6 = "Address6"
     POSTCODE = "PostCode"
 
-class TVVUploadCols(str, Enum):
+class TTWUploadCols(str, Enum):
     FORENAME = "Forename"
     MIDDLE_NAMES = "Middle Names"
     SURNAME = "Surname"

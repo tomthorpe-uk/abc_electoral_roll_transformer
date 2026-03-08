@@ -1,5 +1,5 @@
 import pandas as pd
-from schemas import MonthlyUpdateCols, FullRegisterCols, TVVUploadCols
+from schemas import MonthlyUpdateCols, FullRegisterCols, TTWUploadCols
 
 def monthly_update_to_full_file(data: pd.DataFrame) ->pd.DataFrame:
     output_df = pd.DataFrame(index=data.index)
@@ -34,7 +34,7 @@ def monthly_update_to_full_file(data: pd.DataFrame) ->pd.DataFrame:
     
     return output_df
 
-def full_file_to_tvv_upload(data: pd.DataFrame):
+def full_file_to_ttw_upload(data: pd.DataFrame):
     output_df = pd.DataFrame(index=data.index)
 
     # convert DOB to date of attainment
@@ -42,20 +42,20 @@ def full_file_to_tvv_upload(data: pd.DataFrame):
     date_of_attainment = dob.apply(lambda x: x + pd.DateOffset(years=18))
 
     # map to output df
-    output_df[TVVUploadCols.PREFIX] = data[FullRegisterCols.PREFIX]
-    output_df[TVVUploadCols.NUMBER] = data[FullRegisterCols.NUMBER]
-    output_df[TVVUploadCols.SUFFIX] = data[FullRegisterCols.SUFFIX]
-    output_df[TVVUploadCols.FORENAME] = data[FullRegisterCols.FORENAME]
-    output_df[TVVUploadCols.MIDDLE_NAMES] = None
-    output_df[TVVUploadCols.SURNAME] = data[FullRegisterCols.SURNAME]
-    output_df[TVVUploadCols.DATE_OF_ATTAINMENT] = date_of_attainment
-    output_df[TVVUploadCols.ADDRESS_1] = data[FullRegisterCols.ADDRESS_1]
-    output_df[TVVUploadCols.ADDRESS_2] = data[FullRegisterCols.ADDRESS_2]
-    output_df[TVVUploadCols.ADDRESS_3] = data[FullRegisterCols.ADDRESS_3]
-    output_df[TVVUploadCols.ADDRESS_4] = data[FullRegisterCols.ADDRESS_4]
-    output_df[TVVUploadCols.ADDRESS_5] = data[FullRegisterCols.ADDRESS_5]
-    output_df[TVVUploadCols.ADDRESS_6] = data[FullRegisterCols.ADDRESS_6]
-    output_df[TVVUploadCols.POSTCODE] = data[FullRegisterCols.POSTCODE]
-    output_df[TVVUploadCols.UPRN] = None
+    output_df[TTWUploadCols.PREFIX] = data[FullRegisterCols.PREFIX]
+    output_df[TTWUploadCols.NUMBER] = data[FullRegisterCols.NUMBER]
+    output_df[TTWUploadCols.SUFFIX] = data[FullRegisterCols.SUFFIX]
+    output_df[TTWUploadCols.FORENAME] = data[FullRegisterCols.FORENAME]
+    output_df[TTWUploadCols.MIDDLE_NAMES] = None
+    output_df[TTWUploadCols.SURNAME] = data[FullRegisterCols.SURNAME]
+    output_df[TTWUploadCols.DATE_OF_ATTAINMENT] = date_of_attainment
+    output_df[TTWUploadCols.ADDRESS_1] = data[FullRegisterCols.ADDRESS_1]
+    output_df[TTWUploadCols.ADDRESS_2] = data[FullRegisterCols.ADDRESS_2]
+    output_df[TTWUploadCols.ADDRESS_3] = data[FullRegisterCols.ADDRESS_3]
+    output_df[TTWUploadCols.ADDRESS_4] = data[FullRegisterCols.ADDRESS_4]
+    output_df[TTWUploadCols.ADDRESS_5] = data[FullRegisterCols.ADDRESS_5]
+    output_df[TTWUploadCols.ADDRESS_6] = data[FullRegisterCols.ADDRESS_6]
+    output_df[TTWUploadCols.POSTCODE] = data[FullRegisterCols.POSTCODE]
+    output_df[TTWUploadCols.UPRN] = None
 
     return output_df

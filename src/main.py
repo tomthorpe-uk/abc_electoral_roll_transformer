@@ -1,6 +1,6 @@
  
 from file_io import import_full_electoral_role, import_electoral_role_update
-from conversion import monthly_update_to_full_file, full_file_to_tvv_upload
+from conversion import monthly_update_to_full_file, full_file_to_ttw_upload
 from crud import apply_create, apply_deletes, apply_edits
 
 def main() -> None:
@@ -25,17 +25,17 @@ def main() -> None:
     print("Saving...")
     main_file_data.to_csv("merged_electoral_role.csv", index=False, encoding="utf-8-sig")
 
-    import_tvv = input("Convert to TVV format (y/n): ")
-    if import_tvv.lower() == "y":
-        print("Converting to TVV format...")
-        tvv_file = full_file_to_tvv_upload(main_file_data)
+    import_ttw = input("Convert to TTW format (y/n): ")
+    if import_ttw.lower() == "y":
+        print("Converting to TTW format...")
+        ttw_file = full_file_to_ttw_upload(main_file_data)
 
         # split files over 100k lines into multiple output files
-        if tvv_file.shape[0] > 100000:
-            for i in range(0, tvv_file.shape[0], 100000):
-                tvv_file[i:i+100000].to_csv(f"tvv_upload_{i}.csv", index=False, encoding="utf-8-sig")
+        if ttw_file.shape[0] > 100000:
+            for i in range(0, ttw_file.shape[0], 100000):
+                ttw_file[i:i+100000].to_csv(f"ttw_upload_{i}.csv", index=False, encoding="utf-8-sig")
         else:       
-            tvv_file.to_csv("tvv_upload.csv", index=False, encoding="utf-8-sig")
+            ttw_file.to_csv("ttw_upload_.csv", index=False, encoding="utf-8-sig")
 
     print("Done!")
 
