@@ -58,5 +58,4 @@ def full_file_to_tvv_upload(data: pd.DataFrame):
     output_df[TVVUploadCols.POSTCODE] = data[FullRegisterCols.POSTCODE]
     output_df[TVVUploadCols.UPRN] = None
 
-
     return output_df

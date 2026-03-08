@@ -26,10 +26,16 @@ def main() -> None:
     main_file_data.to_csv("merged_electoral_role.csv", index=False, encoding="utf-8-sig")
 
     import_tvv = input("Convert to TVV format (y/n): ")
-    if import_tvv == "y":
+    if import_tvv.lower() == "y":
         print("Converting to TVV format...")
         tvv_file = full_file_to_tvv_upload(main_file_data)
-        tvv_file.to_csv("tvv_upload.csv", index=False, encoding="utf-8-sig")
+
+        # split files over 100k lines into multiple output files
+        if tvv_file.shape[0] > 100000:
+            for i in range(0, tvv_file.shape[0], 100000):
+                tvv_file[i:i+100000].to_csv(f"tvv_upload_{i}.csv", index=False, encoding="utf-8-sig")
+        else:       
+            tvv_file.to_csv("tvv_upload.csv", index=False, encoding="utf-8-sig")
 
     print("Done!")
 
