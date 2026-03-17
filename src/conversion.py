@@ -35,27 +35,42 @@ def monthly_update_to_full_file(data: pd.DataFrame) ->pd.DataFrame:
     return output_df
 
 def full_file_to_ttw_upload(data: pd.DataFrame):
+    REGEX_STARTS_NUMERIC = r'^\d+'
+    REGEX_OLD_ADDRESS = r'^(\d+\S*)\s+(.*)'
+    REGEX_NEW_ADDRESS = r'\2 (No. \1)'
+
     output_df = pd.DataFrame(index=data.index)
 
+    # filter out bad data from full file
+    filtered_data = data[data[FullRegisterCols.ADDRESS_1].notnull()]
+    filtered_data = filtered_data[filtered_data[FullRegisterCols.SURNAME].notnull()]
+
+    # reformat address where building name and street name start with a number
+    address_1_and_2_start_numeric = (
+        filtered_data[FullRegisterCols.ADDRESS_1].str.match(REGEX_STARTS_NUMERIC).fillna(False) & 
+        filtered_data[FullRegisterCols.ADDRESS_2].str.match(REGEX_STARTS_NUMERIC).fillna(False)
+        )
+    filtered_data.loc[address_1_and_2_start_numeric, FullRegisterCols.ADDRESS_1] = filtered_data.loc[address_1_and_2_start_numeric, FullRegisterCols.ADDRESS_1].str.replace(REGEX_OLD_ADDRESS, REGEX_NEW_ADDRESS, regex=True)
+    
     # convert DOB to date of attainment
-    dob: pd.Series = pd.to_datetime(data[FullRegisterCols.DOB], dayfirst=True, errors='coerce')
+    dob: pd.Series = pd.to_datetime(filtered_data[FullRegisterCols.DOB], dayfirst=True, errors='coerce')
     date_of_attainment = dob.apply(lambda x: x + pd.DateOffset(years=18))
 
     # map to output df
-    output_df[TTWUploadCols.PREFIX] = data[FullRegisterCols.PREFIX]
-    output_df[TTWUploadCols.NUMBER] = data[FullRegisterCols.NUMBER]
-    output_df[TTWUploadCols.SUFFIX] = data[FullRegisterCols.SUFFIX]
-    output_df[TTWUploadCols.FORENAME] = data[FullRegisterCols.FORENAME]
+    output_df[TTWUploadCols.PREFIX] = filtered_data[FullRegisterCols.PREFIX]
+    output_df[TTWUploadCols.NUMBER] = filtered_data[FullRegisterCols.NUMBER]
+    output_df[TTWUploadCols.SUFFIX] = filtered_data[FullRegisterCols.SUFFIX]
+    output_df[TTWUploadCols.FORENAME] = filtered_data[FullRegisterCols.FORENAME]
     output_df[TTWUploadCols.MIDDLE_NAMES] = None
-    output_df[TTWUploadCols.SURNAME] = data[FullRegisterCols.SURNAME]
+    output_df[TTWUploadCols.SURNAME] = filtered_data[FullRegisterCols.SURNAME]
     output_df[TTWUploadCols.DATE_OF_ATTAINMENT] = date_of_attainment
-    output_df[TTWUploadCols.ADDRESS_1] = data[FullRegisterCols.ADDRESS_1]
-    output_df[TTWUploadCols.ADDRESS_2] = data[FullRegisterCols.ADDRESS_2]
-    output_df[TTWUploadCols.ADDRESS_3] = data[FullRegisterCols.ADDRESS_3]
-    output_df[TTWUploadCols.ADDRESS_4] = data[FullRegisterCols.ADDRESS_4]
-    output_df[TTWUploadCols.ADDRESS_5] = data[FullRegisterCols.ADDRESS_5]
-    output_df[TTWUploadCols.ADDRESS_6] = data[FullRegisterCols.ADDRESS_6]
-    output_df[TTWUploadCols.POSTCODE] = data[FullRegisterCols.POSTCODE]
+    output_df[TTWUploadCols.ADDRESS_1] = filtered_data[FullRegisterCols.ADDRESS_1]
+    output_df[TTWUploadCols.ADDRESS_2] = filtered_data[FullRegisterCols.ADDRESS_2]
+    output_df[TTWUploadCols.ADDRESS_3] = filtered_data[FullRegisterCols.ADDRESS_3]
+    output_df[TTWUploadCols.ADDRESS_4] = filtered_data[FullRegisterCols.ADDRESS_4]
+    output_df[TTWUploadCols.ADDRESS_5] = filtered_data[FullRegisterCols.ADDRESS_5]
+    output_df[TTWUploadCols.ADDRESS_6] = filtered_data[FullRegisterCols.ADDRESS_6]
+    output_df[TTWUploadCols.POSTCODE] = filtered_data[FullRegisterCols.POSTCODE]
     output_df[TTWUploadCols.UPRN] = None
 
     return output_df
